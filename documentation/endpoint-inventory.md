@@ -42,7 +42,20 @@ Identify API endpoints used during normal registration, authentication and dashb
 - **Observed baseline status:** HTTP 200
 - **Purpose:** Retrieve dashboard data for the authenticated user
 
-**Security notes:** Confirm which fields are returned and whether they are appropriate for the authenticated user. Do not publish personal data, tokens or other sensitive response values.
+**Security notes:** Confirm which fields are returned and whether they are appropriate for the authenticated user. Do not publish personal data, tokens or other sensitive response values
+
+### Endpoint 04 — Add Vehicle
+
+- **Method:** POST
+- **Path:** `/identity/api/v2/vehicle/add_vehicle`
+- **Authentication:** Bearer token present
+- **Observed status:** HTTP 200
+- **Observed result:** `Vehicle saved successfully`
+- **Purpose:** Register a vehicle to the authenticated test account using a VIN and PIN.
+
+**Security notes:** The request contains vehicle-registration information and an authentication token. Do not include the VIN, PIN, token or other sensitive values in public screenshots or reports.
+
+**Assessment status:** Normal behaviour confirmed. Access-control testing remains to be performed.
 
 ## 4. Authentication Test — Dashboard Without Authorization Header
 
