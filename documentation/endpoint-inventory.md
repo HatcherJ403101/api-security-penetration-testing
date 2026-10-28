@@ -129,6 +129,7 @@ The result is recorded as an observation, not a confirmed vulnerability. Further
 - Removing the Authorization header resulted in HTTP 404 and the message `Given Email is not registered`.
 - The different responses provide a starting point for investigating authentication enforcement.
 - No vulnerability has been confirmed from these observations alone.
+- The vehicle-location endpoint returned location data and owner details for the vehicle registered to the authenticated test account.
 
 ## 6. Next Investigation Steps
 
