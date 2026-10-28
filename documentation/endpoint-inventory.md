@@ -121,6 +121,41 @@ The result is recorded as an observation, not a confirmed vulnerability. Further
 
 **Security note:** The placeholder token was used only in the local training lab. Genuine tokens and session cookies must not be included in public evidence.
 
+## BOLA Test — Cross-Account Vehicle Location
+
+### Objective
+
+Determine whether the vehicle-location endpoint checks that the authenticated user is authorised to access the requested vehicle.
+
+### Test Details
+
+- **Method:** GET
+- **Endpoint:** `/identity/api/v2/vehicle/<vehicle-id>/location`
+- **Authentication:** Bearer token belonging to the first test account
+- **Test:** Changed the vehicle identifier to one associated with a different Community author in the local crAPI lab.
+- **Observed status:** HTTP 200 OK
+- **Observed result:** The response contained the other vehicle's location information and owner details.
+
+### Interpretation
+
+The endpoint returned information associated with a different vehicle while the request used the first test account's authentication token. This demonstrates Broken Object Level Authorisation (BOLA) behaviour in the tested training endpoint.
+
+The result indicates that the endpoint did not enforce the expected object-level permission check for this request.
+
+### Evidence
+
+See the detailed report in [Finding 01 — BOLA in Vehicle Location API](../investigations/01-bola-vehicle-location.md).
+
+The supporting screenshot is stored at `evidence/01-bola-request-response.png`.
+
+### Remediation Summary
+
+The server should verify that the authenticated user is authorised to access each requested vehicle. Knowing a vehicle identifier must not be sufficient to retrieve its location or owner information.
+
+### Security and Privacy
+
+Testing was limited to the local OWASP crAPI lab. Vehicle identifiers, coordinates, owner details and authentication tokens must not appear in public evidence.
+
 ## 5. Initial Observations
 
 - The login flow returned an authentication token.
