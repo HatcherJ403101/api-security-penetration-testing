@@ -94,3 +94,15 @@ After remediation:
 The Contact Mechanic API accepted a client-supplied external URL and returned the resulting HTTP response.
 
 This demonstrates SSRF behaviour in the local training application. The report records the methodology, observed behaviour, potential impact, limitations, remediation and retest criteria.
+
+## 11. Evidence
+
+### Evidence 05 — SSRF Request and Response
+
+[View sanitised request and response](../evidence/05-ssrf-mechanic-api.png)
+
+The screenshot shows the Contact Mechanic API request with `mechanic_api` set to `https://www.google.com` and the corresponding HTTP 200 response.
+
+This evidence supports the observation that the application made a server-side request to a client-supplied external URL and returned the resulting response.
+
+The published screenshot must redact Bearer tokens, cookies, VINs and other sensitive values. The assessment did not test access to internal services or restricted network resources.
