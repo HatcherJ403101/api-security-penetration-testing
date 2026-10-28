@@ -95,3 +95,13 @@ After remediation:
 The assessment demonstrated that the shop order endpoint accepted a negative quantity, returned a successful response and increased the available credit in the training application.
 
 The finding highlights the importance of server-side business-rule validation and correct transaction calculations. The report records the observed behaviour, potential impact, remediation recommendations and retest criteria.
+
+## 11. Evidence
+
+### Evidence 02 — Negative Quantity Order
+
+[View sanitised request and response](../evidence/02-negative-quantity-order.png)
+
+The screenshot shows the negative quantity submitted to the local crAPI shop order endpoint and the successful response indicating that the available credit returned to 100.
+
+This evidence supports the observed business-logic validation flaw. Authentication tokens, cookies and other sensitive values must be redacted from the published screenshot.
