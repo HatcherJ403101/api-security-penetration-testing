@@ -57,6 +57,19 @@ Identify API endpoints used during normal registration, authentication and dashb
 
 **Assessment status:** Normal behaviour confirmed. Access-control testing remains to be performed.
 
+### Endpoint 05 — Vehicle Location
+
+- **Method:** GET
+- **Path:** `/identity/api/v2/vehicle/<vehicle-id>/location`
+- **Authentication:** Bearer token present
+- **Observed status:** Record the actual status code from Burp Suite
+- **Purpose:** Retrieve location information for a vehicle associated with the request.
+- **Observed response fields:** Vehicle ID, vehicle-location ID, latitude, longitude, owner's full name and email address.
+
+**Security notes:** The response contains location information and personal data. In this baseline test, the request concerned the vehicle registered to the test account. These fields should be treated as sensitive and must not be published with real or identifying values.
+
+**Assessment status:** Normal behaviour observed for the test account. Cross-user authorisation has not yet been tested.
+
 ## 4. Authentication Test — Dashboard Without Authorization Header
 
 ### Objective
