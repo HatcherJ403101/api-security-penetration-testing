@@ -92,3 +92,15 @@ After remediation:
 The video-update endpoint accepted a client-supplied `conversion_params` property that was not present in the ordinary video-name update request.
 
 This demonstrates user-controlled modification of an internal video property in the training application. The report records the observed behaviour, potential impact, remediation and retest criteria without claiming untested downstream effects.
+
+## 11. Evidence
+
+### Evidence 03 — Video Conversion Parameter Modification
+
+[View sanitised request and response](../evidence/03-video-conversion-params.png)
+
+The screenshot shows the video-update request with a client-supplied `conversion_params` property and the response returning the modified value.
+
+This supports the finding that the API accepted a change to the tested property in the local crAPI training environment.
+
+The published screenshot must redact authentication tokens and exclude unnecessary Base64 video data. The evidence demonstrates property modification only; it does not establish command execution or further downstream impact.
