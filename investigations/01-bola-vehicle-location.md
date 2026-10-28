@@ -115,3 +115,13 @@ The vehicle-location endpoint returned another author's vehicle-location informa
 The observed behaviour demonstrates a BOLA vulnerability in the tested training endpoint. The report records the reproduction method, observed impact, limitations, recommended remediation and retest criteria.
 
 This investigation demonstrates practical API testing with Burp Suite, object-level authorisation analysis, evidence handling and technical vulnerability reporting.
+
+## 11. Evidence
+
+### Evidence 01 — BOLA Request and Response
+
+Screenshot: `evidence/01-bola-request-response.png`
+
+The combined screenshot shows the modified vehicle-location request and the HTTP 200 response from the local crAPI training environment. Sensitive identifiers, coordinates, owner details and authentication tokens have been redacted.
+
+The evidence supports the observation that the endpoint returned another vehicle's location and owner information while the request used the authenticated test account's token.
