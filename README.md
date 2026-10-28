@@ -4,20 +4,23 @@
 
 This project documents a practical API security assessment using OWASP crAPI, an intentionally vulnerable API training application running locally with Docker.
 
-Using Burp Suite Community Edition, the assessment covers API reconnaissance, authentication behaviour, object-level access control, business-logic validation and user-controlled property modification. Each investigation records the observed behaviour, supporting evidence, potential impact and remediation recommendations.
+Using Burp Suite Community Edition, the assessment covers API reconnaissance, authentication behaviour, object-level authorisation, business-logic validation, property-level controls and administrative function authorisation.
 
-The project forms part of a cybersecurity portfolio focused on developing practical API penetration-testing skills and professional vulnerability reporting.
+Each investigation records the testing methodology, observed behaviour, potential impact, evidence, remediation recommendations and retest criteria.
+
+The project forms part of a cybersecurity portfolio focused on practical API penetration testing and professional vulnerability reporting.
 
 ## Objectives
 
 - Identify API endpoints, HTTP methods and response codes.
 - Inspect authentication flows and authenticated requests.
-- Establish normal behaviour before testing security controls.
+- Establish normal application behaviour before testing controls.
 - Investigate object-level authorisation for vehicle resources.
 - Assess server-side validation of order quantities.
 - Test whether users can modify internal API properties.
+- Test authorisation controls on administrative functions.
 - Validate findings using repeatable requests and observable responses.
-- Record sanitised evidence and protect authentication secrets.
+- Preserve sanitised evidence and protect authentication secrets.
 - Recommend remediation and define retest criteria.
 
 ## Environment and Tools
@@ -39,9 +42,9 @@ The application runs locally in Docker. Published web and MailHog ports were che
 
 Recorded endpoints observed during login, authentication verification, dashboard access, vehicle registration and vehicle-location requests.
 
-The inventory includes HTTP methods, endpoint paths, observed response codes, authentication context and the results of initial authentication checks.
+The inventory includes HTTP methods, endpoint paths, observed response codes, authentication context and initial security observations.
 
-The dashboard returned HTTP 200 with the valid test account's token. Requests without an Authorization header and with an invalid token returned HTTP 404 with the message `Given Email is not registered`. The cause of these responses was not established, so they are documented as observations rather than confirmed vulnerabilities.
+The dashboard returned HTTP 200 with the valid test account's token. Requests without an Authorization header and with an invalid token returned HTTP 404 with the message `Given Email is not registered`. The cause of those responses was not established, so they are documented as observations rather than confirmed vulnerabilities.
 
 **Documentation:** [Read the API endpoint inventory](documentation/endpoint-inventory.md)
 
@@ -49,9 +52,9 @@ The dashboard returned HTTP 200 with the valid test account's token. Requests wi
 
 **Status:** Confirmed in the local training environment
 
-Used Burp Suite Repeater to change the vehicle identifier in a vehicle-location request while retaining the authenticated test account's token.
+Used Burp Suite Repeater to change the vehicle identifier in a vehicle-location request while retaining the authenticated test account's Bearer token.
 
-**Observed result:** The endpoint returned HTTP 200 and included another vehicle's location information and owner details.
+**Observed result:** The API returned HTTP 200 and included another vehicle's location information and owner details.
 
 **Security significance:** The tested endpoint returned data associated with a different vehicle without enforcing the expected object-level permission check for the requesting test account.
 
@@ -65,7 +68,7 @@ Used Burp Suite Repeater to change the vehicle identifier in a vehicle-location 
 
 Used Burp Suite Repeater to change an order quantity to `-1` after establishing normal purchase behaviour.
 
-**Observed result:** The API returned HTTP 200 with a successful order message, and the available test-account credit increased from 90 to 100.
+**Observed result:** The API returned HTTP 200 with a successful order message. The available test-account credit increased from 90 to 100 following the negative-quantity request.
 
 **Security significance:** The result demonstrates a business-logic validation flaw in the training application: a negative order quantity was accepted and the resulting transaction increased the available credit.
 
@@ -87,6 +90,20 @@ Inspected the normal video-name update request, then added a client-supplied `co
 
 **Supporting evidence:** [View the sanitised request and response](evidence/03-video-conversion-params.png)
 
+### 5. Broken Function Level Authorisation (BFLA) — Administrative Video Deletion
+
+**Status:** Confirmed in the local training environment
+
+Used Account A's standard-user authentication token to submit a DELETE request to the administrative video endpoint, targeting a disposable test video belonging to Account B.
+
+**Observed result:** The API returned HTTP 200 with the message `User video deleted successfully.`
+
+**Security significance:** The administrative deletion operation accepted a request made using a standard user's token and reported successful deletion of another test user's video. This demonstrates an authorisation failure in the tested endpoint.
+
+**Investigation report:** [Read the BFLA video-deletion finding](investigations/04-bfla-admin-video-deletion.md)
+
+**Supporting evidence:** [View the sanitised request and response](evidence/04-bfla-admin-video-deletion.png)
+
 ## Reporting Methodology
 
 The assessment follows a structured process:
@@ -107,7 +124,7 @@ All testing is restricted to the local OWASP crAPI training application and its 
 
 Public reports and screenshots must exclude Bearer tokens, session cookies, passwords, VINs, PINs, vehicle identifiers, coordinates, personal names, email addresses, Base64 video data and other sensitive values.
 
-The findings describe behaviour observed in this deliberately vulnerable training environment. They do not establish that another application has the same vulnerabilities.
+The findings describe behaviour observed in this deliberately vulnerable training environment. They do not establish that other applications have the same vulnerabilities.
 
 ## Skills Demonstrated
 
@@ -118,6 +135,7 @@ The findings describe behaviour observed in this deliberately vulnerable trainin
 - Object-level authorisation testing
 - Business-logic and input-validation testing
 - API property modification testing
+- Administrative function authorisation testing
 - Evidence collection and sanitisation
 - Vulnerability impact assessment
 - Remediation and retest planning
