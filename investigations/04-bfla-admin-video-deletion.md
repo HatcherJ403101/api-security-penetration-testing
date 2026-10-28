@@ -95,3 +95,15 @@ After remediation:
 The administrative video-deletion endpoint accepted a request authenticated as a standard user and returned a successful deletion message for a video belonging to a different test account.
 
 The observed behaviour demonstrates a BFLA vulnerability in the tested training endpoint, alongside a cross-user resource authorisation failure. The report documents the methodology, evidence, impact, remediation and retest criteria.
+
+## 11. Evidence
+
+### Evidence 04 — Administrative Video Deletion
+
+[View sanitised request and response](../evidence/04-bfla-admin-video-deletion.png)
+
+The screenshot shows a DELETE request to the administrative video endpoint, made using the standard test account's authentication token, and the HTTP 200 response reporting successful deletion.
+
+This supports the observed finding that the administrative deletion operation accepted the request from a standard user.
+
+The published screenshot must redact the Bearer token, session cookies and actual video identifier.
