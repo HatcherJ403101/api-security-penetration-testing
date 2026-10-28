@@ -73,6 +73,28 @@ The result alone does not prove that authentication is correctly enforced, nor d
 
 The response was recorded from the local training application. The underlying application logic was not inspected, so the cause of the error remains unconfirmed.
 
+### Follow-up Test — Invalid Authorization Token
+
+**Objective:** Compare the dashboard endpoint's response when supplied with an invalid token.
+
+**Test details:**
+- **Method:** GET
+- **Path:** `/identity/api/v2/user/dashboard`
+- **Authorization header:** Present, with a deliberately invalid placeholder token
+- **Observed status:** HTTP 404
+- **Observed message:** `Given Email is not registered`
+- **Dashboard data returned:** No dashboard data was observed
+
+**Interpretation:**
+
+The invalid-token request returned the same status code and message as the request without an Authorization header. Neither request returned dashboard data.
+
+The matching responses suggest that the application handles these two test cases similarly, but they do not establish the precise internal reason for the response or prove that authentication controls are fully secure.
+
+The result is recorded as an observation, not a confirmed vulnerability. Further testing would be needed to understand the endpoint's authentication behaviour.
+
+**Security note:** The placeholder token was used only in the local training lab. Genuine tokens and session cookies must not be included in public evidence.
+
 ## 5. Initial Observations
 
 - The login flow returned an authentication token.
