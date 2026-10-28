@@ -5,11 +5,11 @@
 **Application:** OWASP crAPI  
 **Environment:** Local Docker lab  
 **Testing tool:** Burp Suite Community Edition  
-**Stage:** Initial authenticated API reconnaissance
+**Stage:** Initial API reconnaissance and authentication testing
 
 ## 2. Objective
 
-Identify API endpoints used during normal registration, authentication and dashboard access. Record their HTTP methods, observed responses, authentication requirements and apparent purpose before conducting security tests.
+Identify API endpoints used during normal registration, authentication and dashboard access. Record their HTTP methods, observed responses, authentication requirements and apparent purpose before conducting further security tests.
 
 ## 3. Observed Endpoints
 
@@ -38,28 +38,59 @@ Identify API endpoints used during normal registration, authentication and dashb
 
 - **Method:** GET
 - **Path:** `/identity/api/v2/user/dashboard`
-- **Authentication:** Authorization header present
-- **Observed status:** HTTP 200
+- **Authentication:** Authorization header present in the baseline request
+- **Observed baseline status:** HTTP 200
 - **Purpose:** Retrieve dashboard data for the authenticated user
 
 **Security notes:** Confirm which fields are returned and whether they are appropriate for the authenticated user. Do not publish personal data, tokens or other sensitive response values.
 
-## 4. Initial Observations
+## 4. Authentication Test — Dashboard Without Authorization Header
+
+### Objective
+
+Determine how the dashboard endpoint responds when the request is sent without an Authorization header.
+
+### Test Details
+
+- **Method:** GET
+- **Path:** `/identity/api/v2/user/dashboard`
+- **Baseline with Authorization header:** HTTP 200
+- **Test without Authorization header:** HTTP 404
+- **Observed response message:** `Given Email is not registered`
+- **Dashboard data returned:** No dashboard data was observed in the response
+
+### Observed Behaviour
+
+The authenticated request returned HTTP 200. After the Authorization header was removed, the request returned HTTP 404 with a message indicating that the email was not registered.
+
+### Interpretation
+
+The unauthenticated request produced a different result from the authenticated baseline. However, the reason for the 404 response has not been established.
+
+The result alone does not prove that authentication is correctly enforced, nor does it demonstrate unauthorised access to dashboard data. Further testing is required to understand how the endpoint handles missing or invalid authentication.
+
+### Limitations
+
+The response was recorded from the local training application. The underlying application logic was not inspected, so the cause of the error remains unconfirmed.
+
+## 5. Initial Observations
 
 - The login flow returned an authentication token.
 - An authentication-verification request returned HTTP 200.
-- A subsequent dashboard request included an Authorization header and returned HTTP 200.
-- These observations establish a baseline for normal authenticated API activity.
-- No vulnerability has been confirmed from these requests alone.
+- The authenticated dashboard request included an Authorization header and returned HTTP 200.
+- Removing the Authorization header resulted in HTTP 404 and the message `Given Email is not registered`.
+- The different responses provide a starting point for investigating authentication enforcement.
+- No vulnerability has been confirmed from these observations alone.
 
-## 5. Next Investigation Steps
+## 6. Next Investigation Steps
 
-1. Record the relevant request and response metadata for each endpoint.
-2. Review the dashboard response fields using the local test account.
-3. Establish expected behaviour for authenticated and unauthenticated requests.
-4. Assess authorisation controls using only the local crAPI environment and test accounts.
-5. Document any confirmed findings with sanitised evidence, impact, remediation and retest criteria.
+1. Confirm that the authenticated and unauthenticated dashboard requests use the same method, host and path.
+2. Verify that removing the Authorization header was the only intentional change to the request.
+3. Compare the successful authenticated response with the unauthenticated response without recording or publishing sensitive data.
+4. Investigate the behaviour of the endpoint when authentication is missing or invalid.
+5. Assess authorisation controls using only the local crAPI environment and test accounts.
+6. Document any confirmed findings with sanitised evidence, impact, remediation and retest criteria.
 
-## 6. Evidence Handling
+## 7. Evidence Handling
 
 Do not publish passwords, Bearer tokens, session cookies, API keys or other authentication secrets. Any request or response screenshots must be sanitised before they are added to GitHub.
